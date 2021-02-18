@@ -40,8 +40,10 @@ namespace Loterias
         public string nome { get; set; }
         public int numeroInicial { get; set; }
         public int numeroFinal { get; set; }
+        public int qtdeNumerosSortear { get; set; }
         public int qtdeNumerosMarcar { get; set; }
         public int qtdeNumeroAcertar { get; set; }
+        public int qtdeAcertosRelevante { get; set; }
     }
 
     class Program
@@ -51,8 +53,9 @@ namespace Loterias
         private static List<Jogo> jogos = new List<Jogo>();
         private static List<TipoJogo> loterias = new List<TipoJogo>
         {
-            new TipoJogo {  nome = "Mega Sena", numeroInicial = 1, numeroFinal = 60, qtdeNumeroAcertar = 6, qtdeNumerosMarcar = 6 },
-            new TipoJogo { nome = "Loto Fácil", numeroInicial = 1, numeroFinal = 25, qtdeNumeroAcertar = 15, qtdeNumerosMarcar = 15 }
+            new TipoJogo {  nome = "Mega Sena", numeroInicial = 1, numeroFinal = 60, qtdeNumerosSortear = 6, qtdeNumerosMarcar = 6, qtdeNumeroAcertar = 6, qtdeAcertosRelevante = 4 },
+            new TipoJogo { nome = "Loto Fácil", numeroInicial = 1, numeroFinal = 25, qtdeNumerosSortear = 15, qtdeNumerosMarcar = 15, qtdeNumeroAcertar = 15, qtdeAcertosRelevante = 11 },
+            new TipoJogo { nome = "LotoMania", numeroInicial = 0, numeroFinal = 99, qtdeNumerosSortear = 20, qtdeNumerosMarcar = 50, qtdeNumeroAcertar = 20, qtdeAcertosRelevante = 15 }
         };
 
         static void Main(string[] args)
@@ -89,14 +92,14 @@ namespace Loterias
             int qtd = Convert.ToInt32(Console.ReadLine());
 
             for (int i = 0; i < qtd; i++)
-                GerarGanhador(SortearNumeros(tipoJogo), tipoJogo);
+                GerarGanhador(SortearNumeros(tipoJogo, true), tipoJogo);
 
             Console.WriteLine("Prontinho... aqui os seus " + qtd + "x jogos...");
             jogos.ForEach(j => Console.WriteLine(j.ToString()));
             File.WriteAllLines(@"D:\Área de Trabalho\JogosLoteria.txt", jogos.OrderBy(j => j.tentativas).Select(j => j.ToString()));
         }
 
-        public static int[] SortearNumeros(TipoJogo tipoJogo)
+        public static int[] SortearNumeros(TipoJogo tipoJogo, bool inicial = false)
         {
             List<int> numeros = new List<int>();
             do
@@ -106,13 +109,8 @@ namespace Loterias
                 {
                     numeros.Add(numero);
                 }
-            } while (numeros.Count < tipoJogo.qtdeNumerosMarcar);
+            } while (numeros.Count < (inicial ? tipoJogo.qtdeNumerosSortear : tipoJogo.qtdeNumerosMarcar));
             return numeros.ToArray();
-        }
-
-        public static bool VerificaSeAcertouNumeros(int[] numerosSorteados, int[] numerosJogados)
-        {
-            return numerosSorteados.All(n => numerosJogados.Contains(n));
         }
 
         public static void GerarGanhador(int[] numerosSorteio, TipoJogo tipoJogo)
@@ -120,19 +118,20 @@ namespace Loterias
             int tentativas = 0;
             int[] tentiva;
             string jogoAtual = string.Join(",", numerosSorteio);
-            Console.WriteLine("Sorteio atual: ", jogoAtual);
+            Console.WriteLine("Sorteio atual: "+ jogoAtual);
+            Jogo jogo;
             do
             {
                 tentiva = SortearNumeros(tipoJogo);
                 tentativas += 1;
-                Jogo jogo = new Jogo(tipoJogo.nome, tentativas, numerosSorteio, tentiva);
-                if (jogo.acertos == (tipoJogo.qtdeNumeroAcertar - 1))
+                jogo = new Jogo(tipoJogo.nome, tentativas, numerosSorteio, tentiva);
+                if (jogo.acertos >= tipoJogo.qtdeAcertosRelevante)
                 {
                     Console.WriteLine("Quase!!\n" + jogo.ToString());
                 }
-            } while (!VerificaSeAcertouNumeros(numerosSorteio, tentiva));
+            } while (jogo.acertos < tipoJogo.qtdeNumeroAcertar);
             Console.WriteLine("\n\nParabéns, Acertou!!");
-            jogos.Add(new Jogo(tipoJogo.nome, tentativas, numerosSorteio, tentiva));
+            jogos.Add(jogo);
         }
     }
 }

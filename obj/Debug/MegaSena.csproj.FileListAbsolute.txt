@@ -1,0 +1,7 @@
+D:\Documentos\Git\MegaSena\MegaSena\bin\Debug\MegaSena.exe.config
+D:\Documentos\Git\MegaSena\MegaSena\bin\Debug\MegaSena.exe
+D:\Documentos\Git\MegaSena\MegaSena\bin\Debug\MegaSena.pdb
+D:\Documentos\Git\MegaSena\MegaSena\obj\Debug\MegaSena.csprojAssemblyReference.cache
+D:\Documentos\Git\MegaSena\MegaSena\obj\Debug\MegaSena.csproj.CoreCompileInputs.cache
+D:\Documentos\Git\MegaSena\MegaSena\obj\Debug\MegaSena.exe
+D:\Documentos\Git\MegaSena\MegaSena\obj\Debug\MegaSena.pdb
