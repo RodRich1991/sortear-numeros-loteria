@@ -55,7 +55,8 @@ namespace Loterias
         {
             new TipoJogo {  nome = "Mega Sena", numeroInicial = 1, numeroFinal = 60, qtdeNumerosSortear = 6, qtdeNumerosMarcar = 6, qtdeNumeroAcertar = 6, qtdeAcertosRelevante = 4 },
             new TipoJogo { nome = "Loto Fácil", numeroInicial = 1, numeroFinal = 25, qtdeNumerosSortear = 15, qtdeNumerosMarcar = 15, qtdeNumeroAcertar = 15, qtdeAcertosRelevante = 11 },
-            new TipoJogo { nome = "LotoMania", numeroInicial = 0, numeroFinal = 99, qtdeNumerosSortear = 20, qtdeNumerosMarcar = 50, qtdeNumeroAcertar = 20, qtdeAcertosRelevante = 15 }
+            new TipoJogo { nome = "Quina", numeroInicial = 1, numeroFinal = 80, qtdeNumerosSortear = 5, qtdeNumerosMarcar = 5, qtdeNumeroAcertar = 5, qtdeAcertosRelevante = 2 },
+            new TipoJogo { nome = "LotoMania", numeroInicial = 0, numeroFinal = 99, qtdeNumerosSortear = 20, qtdeNumerosMarcar = 50, qtdeNumeroAcertar = 20, qtdeAcertosRelevante = 15 },
         };
 
         static void Main(string[] args)
@@ -125,12 +126,16 @@ namespace Loterias
                 tentiva = SortearNumeros(tipoJogo);
                 tentativas += 1;
                 jogo = new Jogo(tipoJogo.nome, tentativas, numerosSorteio, tentiva);
-                if (jogo.acertos >= tipoJogo.qtdeAcertosRelevante)
+                if (jogo.acertos == tipoJogo.qtdeNumeroAcertar)
                 {
-                    Console.WriteLine("Quase!!\n" + jogo.ToString());
+                    Console.WriteLine("Parabéns, Acertou!!\n");
+                } else if (jogo.acertos == (tipoJogo.qtdeNumeroAcertar - 1)) {
+                    Console.WriteLine("Hmm....essa passou perto hein!!\n");
+                } else if (jogo.acertos >= tipoJogo.qtdeAcertosRelevante)
+                {
+                    Console.WriteLine("Já é alguam coisa...\n" + jogo.ToString());
                 }
             } while (jogo.acertos < tipoJogo.qtdeNumeroAcertar);
-            Console.WriteLine("\n\nParabéns, Acertou!!");
             jogos.Add(jogo);
         }
     }
